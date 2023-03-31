@@ -1,3 +1,6 @@
+import Adres.Adres;
+import Adres.AdresDAO;
+import Adres.AdresDAOPsql;
 import Reiziger.Reiziger;
 import Reiziger.ReizigerDAO;
 import Reiziger.ReizigerDAOPsql;
@@ -89,4 +92,53 @@ public class Main {
 
         System.out.println("\n---------- End of Test ReizigerDAO -------------");
     }
+
+    public static void testAdresDAO(AdresDAO adao, ReizigerDAO rdao) throws SQLException {
+        System.out.println("\n---------- Test AdresDAO ----------");
+
+        // Haal alle adressen op uit de database
+        List<Adres> adressen = adao.findAll();
+        System.out.println("[Test] AdresDAO.findAll() geeft de volgende " + adressen.size() + " adressen:");
+        for (Adres adres : adressen) {
+            System.out.println(adres);
+        }
+        System.out.println();
+
+        // Maak een nieuwe adres aan en persisteer deze in de database
+        Reiziger reiziger = new Reiziger(76,"J", "de", "Tester", Date.valueOf("1995-05-25"));
+        rdao.save(reiziger);
+        Adres nieuwAdres = new Adres(442,"1234AB", "10", "Teststraat", "Teststad", reiziger);
+        System.out.print("[Test] Eerst " + adressen.size() + " adressen, na AdresDAO.save() ");
+        adao.save(nieuwAdres);
+        adressen = adao.findAll();
+        System.out.println(adressen.size() + " adressen");
+        System.out.println();
+
+        // Update het adres
+        System.out.println("[Test] AdresDAO.update() voor de update: " + nieuwAdres);
+        nieuwAdres.setPostcode("5678CD");
+        nieuwAdres.setHuisnummer("20");
+        nieuwAdres.setWoonplaats("GewijzigdeTeststad");
+        adao.update(nieuwAdres);
+        System.out.println("[Test] AdresDAO.update() na de update: " + nieuwAdres);
+        System.out.println();
+
+        // Vind adres via reiziger
+        System.out.println("[Test] AdresDAO.findByReiziger() geeft de volgende adressen voor reiziger " + reiziger.getNaam() + ":");
+        Adres adressenVanReiziger = adao.findByReiziger(reiziger);
+        System.out.println(adressenVanReiziger);
+        System.out.println();
+
+        // Verwijder het adres
+        System.out.print("[Test] Eerst " + adressen.size() + " adressen, na AdresDAO.delete() ");
+        adao.delete(nieuwAdres);
+        adressen = adao.findAll();
+        System.out.println(adressen.size() + " adressen");
+        System.out.println();
+
+        // Verwijder de reiziger
+        rdao.delete(reiziger);
+    }
+
+
 }
