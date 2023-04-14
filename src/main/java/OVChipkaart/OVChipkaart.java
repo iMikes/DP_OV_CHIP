@@ -1,8 +1,12 @@
 package OVChipkaart;
 
 import Reiziger.Reiziger;
+import Product.Product;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class OVChipkaart {
     private int kaartnummer;
@@ -10,6 +14,7 @@ public class OVChipkaart {
     private int klasse;
     private double saldo;
     private Reiziger reiziger;
+    private List<Product> producten;
 
     public OVChipkaart(int kaartnummer, Date geldigTot, int klasse, double saldo, Reiziger reiziger) {
         this.kaartnummer = kaartnummer;
@@ -17,6 +22,7 @@ public class OVChipkaart {
         this.klasse = klasse;
         this.saldo = saldo;
         this.reiziger = reiziger;
+        this.producten = new ArrayList<>();
     }
 
     public int getKaartnummer() {
@@ -43,7 +49,7 @@ public class OVChipkaart {
         this.klasse = klasse;
     }
 
-    public double getSaldo() {
+    public Double getSaldo() {
         return saldo;
     }
 
@@ -53,6 +59,10 @@ public class OVChipkaart {
 
     public Reiziger getReiziger() {
         return reiziger;
+    }
+
+    public List<Product> getProducten() {
+        return producten;
     }
 
     public void setReiziger(Reiziger reiziger) {

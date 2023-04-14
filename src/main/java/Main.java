@@ -1,15 +1,14 @@
 import Adres.Adres;
 import Adres.AdresDAO;
 import Adres.AdresDAOPsql;
+import Product.Product;
+import Product.ProductDAO;
+import Product.ProductDAOPsql;
 import Reiziger.Reiziger;
 import Reiziger.ReizigerDAO;
 import Reiziger.ReizigerDAOPsql;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public class Main {
@@ -36,7 +35,9 @@ public class Main {
             app.getConnection(url, user, password);
 
             ReizigerDAO reizigerDAO = new ReizigerDAOPsql(conn);
+            ProductDAO productDAO = new ProductDAOPsql(conn);
             testReizigerDAO(reizigerDAO);
+            testProductDAO(productDAO);
 
             app.closeConnection();
         } catch (SQLException e) {
@@ -93,7 +94,7 @@ public class Main {
         System.out.println("\n---------- End of Test ReizigerDAO -------------");
     }
 
-    public static void testAdresDAO(AdresDAO adao, ReizigerDAO rdao) throws SQLException {
+        public static void testAdresDAO(AdresDAO adao, ReizigerDAO rdao) throws SQLException {
         System.out.println("\n---------- Test AdresDAO ----------");
 
         // Haal alle adressen op uit de database
@@ -138,6 +139,38 @@ public class Main {
 
         // Verwijder de reiziger
         rdao.delete(reiziger);
+    }
+    public static void testProductDAO(ProductDAO productDAO) throws SQLException {
+        // Maak een nieuwe Product
+        Product product1 = new Product(4212, "TestProduct1", "Dit is een testproduct", 10.50);
+
+        // Test de save() methode
+        System.out.println("Test save() methode:");
+        if (productDAO.save(product1)) {
+            System.out.println("Product opgeslagen in database: " + product1);
+        } else {
+            System.out.println("Product kon niet worden opgeslagen in database");
+        }
+
+        // Test de update() methode
+        System.out.println("\nTest update() methode:");
+        product1.setPrijs(9.99);
+        if (productDAO.update(product1)) {
+            System.out.println("Product bijgewerkt in database: " + product1);
+        } else {
+            System.out.println("Product kon niet worden bijgewerkt in database");
+        }
+
+        // Test de delete() methode
+        System.out.println("\nTest delete() methode:");
+        if (productDAO.delete(product1)) {
+            System.out.println("Product verwijderd uit database: " + product1);
+        } else {
+            System.out.println("Product kon niet worden verwijderd uit database");
+        }
+
+        // Sluit de connectie met de database
+        conn.close();
     }
 
 
